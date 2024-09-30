@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 class Category(models.Model):
@@ -41,3 +42,22 @@ class User(models.Model):
             raise ValidationError(
                 "O papel não pode ter mais de 200 caracteres."
             )
+
+
+def validate_title(title):
+    if title.count(" ") < 1:
+        raise ValidationError("O título deve conter pelo menos 2 palavras.")
+
+
+class News(models.Model):
+    title = models.CharField(
+        max_length=200, blank=False, validators=[validate_title]
+    )
+    content = models.TextField(blank=False)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateField(default=timezone.now)
+    image = models.ImageField(upload_to="img/", blank=True)
+    categories = models.ManyToManyField(Category, blank=True)
+
+    def __str__(self):
+        return self.title
