@@ -6,6 +6,7 @@ from news.views import (
     news_form_view,
     CategoryViewSet,
     UserViewSet,
+    NewsViewSet,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -13,6 +14,7 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r"categories", CategoryViewSet, basename="category")
 router.register(r'users', UserViewSet, basename='user')
+router.register(r'news', NewsViewSet, basename='news')
 
 urlpatterns = [
     path("", index, name="home-page"),
