@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário para Nova Notícia</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="header">
+        <ul class="header-links">
+            <li><a href="{% url 'home-page' %}">Home</a></li>
+            <li><a href="{% url 'categories-form' %}">Cadastrar Categorias</a></li>
+            <li><a href="{% url 'news-form' %}">Cadastrar Notícias</a></li>
+        </ul>
+    </header>
+
+    <h1>Formulário para Nova Notícia</h1>
+
+    <form method="post" action="{% url 'news-form' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>
+            <label for="id_title">Título:</label>
+            <input type="text" name="title" maxlength="200" required id="id_title">
+        </p>
+        <p>
+            <label for="id_content">Conteúdo:</label>
+            <textarea name="content" cols="40" rows="10" required id="id_content"></textarea>
+        </p>
+        <p>
+            <label for="id_author">Autoria:</label>
+            <select name="author" required id="id_author">
+                <option value="" selected>---------</option>
+                {% for user in form.fields.author.queryset %}
+                    <option value="{{ user.id }}">{{ user.name }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="id_created_at">Criado em:</label>
+            <input type="date" name="created_at" required id="id_created_at">
+        </p>
+        <p>
+            <label for="id_image">URL da Imagem:</label>
+            <input type="file" name="image" accept="image/*" id="id_image">
+        </p>
+        <p>
+            <label>Categorias:</label>
+            <div id="id_categories">
+                {% for category in form.fields.categories.queryset %}
+                    <div>
+                        <label for="id_categories_{{ forloop.counter0 }}">
+                            <input type="checkbox" name="categories" value="{{ category.id }}" id="id_categories_{{ forloop.counter0 }}">
+                            {{ category.name }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </p>
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+</html>
